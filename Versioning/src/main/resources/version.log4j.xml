@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="news_console" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<!-- Using one of Log4J's built-in date patterns is significantly faster 
+				than using SimpleDateFormatter see http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html -->
+			<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] %c %x - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="news_file" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/version.log" />
+		<param name="MaxBackupIndex" value="7" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="Append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<!-- Using one of Log4J's built-in date patterns is significantly faster 
+				than using SimpleDateFormatter see http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html -->
+			<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] %c %x - %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="news_file_gz" class="org.apache.log4j.rolling.RollingFileAppender">
+	  <param name="File" value="${catalina.base}/logs/version.log"/>
+    <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+        <param name="FileNamePattern" value="${catalina.base}/logs/version-%d{yyyy-MM-dd}.log.gz"/>
+        <param name="ActiveFileName" value="${catalina.base}/logs/version.log"/>
+    </rollingPolicy>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] %c %x - %m%n"/>
+    </layout>
+  </appender> 
+  
+	<!--
+		This AsyncCoalescingStatisticsAppender groups StopWatch log messages
+		into GroupedTimingStatistics messages which it sends on the
+		file appender defined below
+	  -->
+	<appender name="CoalescingStatistics"
+    	class="org.perf4j.log4j.AsyncCoalescingStatisticsAppender">
+	    <!--
+	    The TimeSlice option is used to determine the time window for which
+	    all received StopWatch logs are aggregated to create a single
+	    GroupedTimingStatistics log. Here we set it to 10 seconds, overriding
+	    the default of 30000 ms
+	    -->
+	    <param name="TimeSlice" value="10000"/>
+	    <appender-ref ref="fileAppender"/>
+	</appender>
+	
+	<!-- This file appender is used to output aggregated performance statistics -->
+	<appender name="fileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+   		<param name="File" value="${catalina.base}/logs/VERSION-perfStats.log"/>
+   		<layout class="org.apache.log4j.PatternLayout">
+    	   	<param name="ConversionPattern" value="%m%n"/>
+   		</layout>
+	</appender>
+	
+	<appender name="timingfile" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/version-performance-stats.log" />
+		<param name="MaxBackupIndex" value="7" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="Append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] %c{3} - %m%n" />
+		</layout>
+	</appender>
+
+	
+	<!-- Loggers -->
+	<!--
+	The Perf4J logger. Note that org.perf4j.TimingLogger is the value of the
+	org.perf4j.StopWatch.DEFAULT_LOGGER_NAME constant. Also, note that
+	additivity is set to false, which is usually what is desired - this means
+	that timing statements will only be sent to this logger and NOT to
+	upstream loggers.
+	-->
+	
+	<logger name="org.perf4j.TimingLogger" additivity="false">
+    	        <level value="DEBUG"/>
+        </logger>
+
+
+	<root>
+		<level value="%(logLevel)s" />
+		<appender-ref ref="news_file_gz" />
+	</root>
+</log4j:configuration>

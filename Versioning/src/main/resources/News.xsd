@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by SHOCK (SHOCK) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:news="http://www.yellglobal.com/domain/news" targetNamespace="http://www.yellglobal.com/domain/news" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:element name="countryContentType" type="news:countryContentType" />
+	<xsd:element name="countryContentTypeV1" type="news:countryContentTypeV1" />
+	<xsd:element name="countryContentTypeV2" type="news:countryContentTypeV2" />
+	
+	
+	<xsd:complexType name="countryContentType">
+		<xsd:choice>
+			<xsd:sequence>
+			<xsd:element name="countryContentTypeV1" type="news:countryContentTypeV1" />
+			</xsd:sequence>
+			<xsd:sequence>
+			<xsd:element name="countryContentTypeV2" type="news:countryContentTypeV2" />
+			</xsd:sequence>
+		</xsd:choice>
+	</xsd:complexType>
+	
+	
+	<xsd:complexType name="countryContentTypeV1">
+		<xsd:sequence>
+			<xsd:element name="url" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="id" type="xsd:string"/>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="dtCreatedAt" type="xsd:string"/>
+			<xsd:element name="dtUpdatedAt" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="state" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Possible values: 0 - Deleted; 1 - Available</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="countryContentTypeV2">
+		<xsd:sequence>
+			<xsd:element name="url" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="id" type="xsd:string"/>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="code" type="xsd:string"/>
+			<xsd:element name="language" type="xsd:string"/>
+			<xsd:element name="dtCreatedAt" type="xsd:string"/>
+			<xsd:element name="dtUpdatedAt" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="state" type="xsd:int" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Possible values: 0 - Deleted; 1 - Available</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+</xsd:schema>
